@@ -1,0 +1,23 @@
+Project Name - Crypto Data Processing 
+
+We have application which generating data continuously. 
+we are dumping those data into DynamoDB table. 
+we have 2 S3 bucket one is to store processed data and another one is for storing metadata and all related to hudi.
+
+To dump that data into DynamoDB we created a table. our goal is to capture CDC from DynamoDB and take those records into kinesis stream and then into Data firehose.
+so for that we created one kinesis data stream and one data firehose stream .
+
+To capture CDC we enabled Dynamo Stream and select a kinesis stream in which CDC captured data is going to land. 
+
+Data in kinesis become input to data firehose and target of firehose is S3 bucket we applied simple transformation on that data using lambda function. 
+Note that don't forgot to attach lambda function to our data firehose. 
+
+So we are getting our transformed data into S3 bucket.
+
+Now we created Glue database , Glue crawler which crawl data in S3 and JSON classifier and attached that classifier to our crawler.
+
+Then we created Glue ETL job which is nothing but pyspark code which apply some transformation and store it in form of hudi table into our second s3 bucket.
+
+At the end we query that data using Athena
+
+Future Scope - We can create Dashboard for the same using AWS Quicksights as well.
